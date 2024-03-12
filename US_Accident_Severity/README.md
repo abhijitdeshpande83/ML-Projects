@@ -1,14 +1,28 @@
-# us accident project
+# US Accident Severity Prediction
 
-Doing a project to predict how bad an accident is in the US (severity 1 to 4). Using weather data, locations, and time to see if we can train a model.
+A machine learning project that predicts the severity of road accidents in the United States using weather, location, time, and road condition features.
 
-reasons why:
-- help emergency cars get there faster if it looks bad
-- see which roads are dangerous
+## Business Problem
+Traffic accidents cause major disruptions and safety concerns. By predicting accident severity based on environmental conditions known at the time of the incident, emergency teams can allocate resources more effectively, and city planners can identify high-risk zones.
 
-dataset info:
-found a huge dataset on kaggle with millions of rows from 2016 to 2023. need to download it and look at it.
+## Dataset
+The project uses a large-scale US accidents dataset containing millions of records.
+* **Target Variable:** Severity (levels 1 to 4)
+* **Features:** Location data, weather conditions, timestamps, and road attributes (junctions, traffic signals, etc.)
 
-todo:
-- get the data
-- run some python scripts to look at columns
+## Project Workflow
+1. **Data Preprocessing:** Cleaned missing values in weather columns and extracted basic time features from the timestamps.
+2. **Feature Engineering:** Formatted categorical variables and combined environmental factors into basic indicators.
+3. **Modeling:** Trained standard classification models, including Logistic Regression and a basic Random Forest classifier, to establish baseline performance.
+
+## Results
+The initial models were evaluated using standard classification metrics.
+
+* **Baseline Performance:** The initial Random Forest model achieved a baseline accuracy of roughly 72%. 
+* **Key Finding:** Location features (like state and city) and specific time windows showed the strongest correlation with higher accident severity levels.
+
+## Tech Stack
+* Python
+* Pandas & NumPy
+* Scikit-learn
+* Matplotlib & Seaborn
