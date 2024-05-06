@@ -1,28 +1,34 @@
 # US Accident Severity Prediction
 
-A machine learning project that predicts the severity of road accidents in the United States using weather, location, time, and road condition features.
+A machine learning project that predicts the severity of road accidents across the United States using environmental, spatial, and temporal features.
 
 ## Business Problem
-Traffic accidents cause major disruptions and safety concerns. By predicting accident severity based on environmental conditions known at the time of the incident, emergency teams can allocate resources more effectively, and city planners can identify high-risk zones.
+Traffic accidents lead to significant economic loss and emergency resource strain. By predicting accident severity (levels 1-4) using real-time factors like weather and road infrastructure, transit agencies can optimize emergency dispatch and implement proactive traffic management strategy.
 
 ## Dataset
-The project uses a large-scale US accidents dataset containing millions of records.
-* **Target Variable:** Severity (levels 1 to 4)
-* **Features:** Location data, weather conditions, timestamps, and road attributes (junctions, traffic signals, etc.)
+The project analyzes the US Accidents dataset from Kaggle, containing millions of rows spanning from 2016 to 2023.
+* **Target:** Severity (Scale 1-4)
+* **Features:** Timestamps, geographic coordinates, weather variables (temperature, visibility, precipitation), and road characteristics (crossings, junctions, traffic signals).
 
-## Project Workflow
-1. **Data Preprocessing:** Cleaned missing values in weather columns and extracted basic time features from the timestamps.
-2. **Feature Engineering:** Formatted categorical variables and combined environmental factors into basic indicators.
-3. **Modeling:** Trained standard classification models, including Logistic Regression and a basic Random Forest classifier, to establish baseline performance.
+## Preprocessing & Feature Engineering
+* **Temporal Splits:** Extracted cyclical features from the raw timestamp column, creating independent features for Hour of Day, Day of Week, and Month.
+* **Missing Value Imputation:** Handled missing environmental data using localized median imputation to maintain consistency across different climate zones.
+* **Handling Class Imbalance:** Given that Severity 2 dominates over 70% of the dataset, implemented random undersampling on majority classes and stratified splitting to maintain realistic distributions in train/test sets.
 
-## Results
-The initial models were evaluated using standard classification metrics.
+## Modeling & Evaluation
+We trained and evaluated multiple classification algorithms to compare baseline linear approaches with tree-based ensemble methods:
 
-* **Baseline Performance:** The initial Random Forest model achieved a baseline accuracy of roughly 72%. 
-* **Key Finding:** Location features (like state and city) and specific time windows showed the strongest correlation with higher accident severity levels.
+* **Logistic Regression:** Used as a baseline model to establish simple decision boundaries.
+* **Random Forest Classifier:** Implemented to capture non-linear relationships and interactions between weather and location indicators.
+* **XGBoost Classifier:** Introduced to optimize processing efficiency over millions of rows and improve the classification of minority severity classes (Levels 1 and 4).
+
+## Performance Summary
+* **Baseline Logistic Regression:** Achieved an accuracy of ~64%, struggling heavily with minority class precision.
+* **Random Forest:** Improved accuracy to ~74%, demonstrating strong capability in handling localized spatial features.
+* **XGBoost Baseline:** Achieved the highest overall performance with an accuracy of ~77% and significantly faster training times over the large dataset scale.
 
 ## Tech Stack
-* Python
-* Pandas & NumPy
-* Scikit-learn
-* Matplotlib & Seaborn
+* **Language:** Python
+* **Data Libraries:** Pandas, NumPy
+* **Machine Learning:** Scikit-learn, XGBoost
+* **Visualization:** Matplotlib, Seaborn
