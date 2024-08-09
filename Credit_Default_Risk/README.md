@@ -3,7 +3,7 @@
 A binary classification project that predicts the probability of a loan applicant defaulting on their credit obligations. Built to demonstrate an end-to-end machine learning workflow on imbalanced financial data, where the cost of a missed default (false negative) is materially higher than the cost of rejecting a good applicant.
 
 ## Business Problem
-Banks and lending institutions lose significant revenue to loan defaults. Approving a defaulter is far more expensive than rejecting a good borrower. The goal is to build a model that ranks applicants by default probability so the lending team can make data-driven approval decisions and optimize risk metrics.
+Banks and lending institutions lose significant revenue to loan defaults. Approving a defaulter is far more expensive than rejecting a good borrower. The goal is to build a model that ranks applicants by default probability so the lending team can make data-driven approval decisions and set risk-based pricing.
 
 ## Dataset
 * **Source:** Home Credit Default Risk (Kaggle)
@@ -14,36 +14,46 @@ Banks and lending institutions lose significant revenue to loan defaults. Approv
 ## Project Workflow
 
 ### 1. Exploratory Data Analysis & Preprocessing
-* Checked distribution of the target variable and evaluated class imbalance profiles.
-* Conducted univariate and bivariate analysis on demographic data and core financial features.
-* Handled missing value patterns via median imputation for numerical attributes.
-* Applied one-hot encoding for low-cardinality categorical variables.
+* Distribution of target variable and class imbalance check.
+* Univariate and bivariate analysis on demographic, credit history, and financial features.
+* Missing value patterns and outlier detection.
+* Missing value imputation (median for numeric, mode for categorical).
+* Categorical encoding (one-hot for low cardinality, target encoding for high cardinality).
 
 ### 2. Feature Engineering
-* **Financial Ratios:** Calculated Debt-to-Income ratios and active credit utilization metrics.
-* **Historical Aggregations:** Extracted aggregated metrics tracking historical credit behavior to isolate risk trends over time.
+* **Debt-to-Income Ratio:** Created specialized continuous ratios to isolate extreme monthly obligations.
+* **Credit Utilization:** Developed features mapping available lines against active spending velocity.
+* **Historical Behavior Aggregations:** Aggregated historical repayment sequences across prior credit bureau records.
 
-### 3. Modeling & Validation Strategy
-* Evaluated multiple classification architectures including Logistic Regression, Random Forest, XGBoost, and LightGBM.
-* Implemented hyperparameter tuning optimized via **Stratified K-Fold Cross-Validation** to guarantee model stability against severe target skew.
+### 3. Handling Class Imbalance
+To counteract the severe 8% positive class imbalance, multiple techniques were systematically evaluated:
+* Baseline training (unweighted)
+* Class weighting (cost-sensitive learning)
+* Synthetic Minority Over-sampling Technique (SMOTE)
+* Random Undersampling
+* *Selection:* **Class Weighting** was chosen as the optimal technique as it yielded the highest validation ROC AUC without inflating training overhead or generating synthetic artifacts.
+
+### 4. Modeling & Validation
+* Models evaluated: Logistic Regression, Random Forest, XGBoost, and LightGBM.
+* Hyperparameter tuning executed via Stratified K-Fold Cross-Validation to maintain stable evaluation metrics across folds.
 
 ## Results & Performance Evaluation
 
-The models were primary evaluated using ROC AUC to measure threshold-independent risk ranking quality.
+Models were primarily ranked on ROC AUC to assess their threshold-independent ability to separate high-risk applicants from low-risk ones.
 
-| Model Architecture | ROC AUC |
-| :--- | :---: |
-| Logistic Regression (Baseline) | 0.662 |
-| Random Forest Classifier | 0.714 |
-| XGBoost Classifier | 0.749 |
-| **LightGBM Classifier (Optimized)** | **0.761** |
+| Model | ROC AUC | Precision | Recall | F1-Score |
+| :--- | :---: | :---: | :---: | :---: |
+| Logistic Regression (Baseline) | 0.662 | 0.12 | 0.61 | 0.20 |
+| Random Forest Classifier | 0.714 | 0.21 | 0.42 | 0.28 |
+| XGBoost Classifier | 0.749 | 0.26 | 0.58 | 0.36 |
+| **LightGBM Classifier (Optimized)** | **0.761** | **0.29** | **0.64** | **0.40** |
 
 ### Key Insights
-* **Debt Impact:** High overall debt-to-income ratios and active credit utilization indicators emerged as the strongest predictors of default risk.
-* **Employment Factor:** Applicants with significantly shorter employment histories displayed a noticeably higher baseline probability of defaulting on repayment structures.
+* **Top Predictors:** Debt-to-income ratio and external credit scores were identified as the top predictors across all tree-based ensemble methods.
+* **Employment Stability:** Applicants with shorter continuous employment history displayed a 2x higher default rate compared to the baseline population.
 
 ## Tech Stack
-Python, Pandas, NumPy, Scikit-learn, XGBoost, LightGBM, Matplotlib, Seaborn
+Python, Pandas, NumPy, Scikit-learn, XGBoost, LightGBM, imbalanced-learn, Matplotlib, Seaborn
 
 ## How to Run
 ```bash
