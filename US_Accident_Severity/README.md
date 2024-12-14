@@ -1,34 +1,37 @@
 # US Accident Severity Prediction
 
-A machine learning project that predicts the severity of road accidents across the United States using environmental, spatial, and temporal features.
+A machine learning project designed to classify and predict the severity of traffic accidents across the United States utilizing environmental, spatial, and temporal features.
 
 ## Business Problem
-Traffic accidents lead to significant economic loss and emergency resource strain. By predicting accident severity (levels 1-4) using real-time factors like weather and road infrastructure, transit agencies can optimize emergency dispatch and implement proactive traffic management strategy.
+Traffic accidents inflict severe economic costs and place immense strain on emergency response infrastructure. Predicting accident severity (levels 1–4) using real-time atmospheric and road-network attributes allows transit authorities to optimize resource allocation and deploy proactive traffic management strategies.
 
-## Dataset
-The project analyzes the US Accidents dataset from Kaggle, containing millions of rows spanning from 2016 to 2023.
-* **Target:** Severity (Scale 1-4)
-* **Features:** Timestamps, geographic coordinates, weather variables (temperature, visibility, precipitation), and road characteristics (crossings, junctions, traffic signals).
+## Dataset & Feature Groups
+The project leverages a large-scale US Accidents dataset (millions of records) spanning from 2016 to 2023. Features are categorized into distinct groups:
+* **Temporal:** Hour of day, day of week, month, and rush-hour indicators.
+* **Environmental:** Temperature, humidity, visibility, precipitation, and wind speed.
+* **Spatial/Infrastructure:** Crossings, junctions, traffic signals, and amenity proximity.
 
-## Preprocessing & Feature Engineering
-* **Temporal Splits:** Extracted cyclical features from the raw timestamp column, creating independent features for Hour of Day, Day of Week, and Month.
-* **Missing Value Imputation:** Handled missing environmental data using localized median imputation to maintain consistency across different climate zones.
-* **Handling Class Imbalance:** Given that Severity 2 dominates over 70% of the dataset, implemented random undersampling on majority classes and stratified splitting to maintain realistic distributions in train/test sets.
+## Data Preprocessing & Pipeline
+* **Feature Engineering:** Extracted cyclical time components and applied target encoding to high-cardinality categorical variables such as city and state.
+* **Imputation & Scaling:** Missing weather data was handled using localized median imputation. Continuous features were scaled using a Standard Scaler.
+* **Class Imbalance Mitigation:** Addressed the severe skew toward Severity 2 by implementing stratified sampling combined with class-weight adjustments during model training.
 
 ## Modeling & Evaluation
-We trained and evaluated multiple classification algorithms to compare baseline linear approaches with tree-based ensemble methods:
+Multiple classification architectures were implemented, progressing from linear baselines to advanced tree-based ensemble methods. Models were optimized using randomized hyperparameter searches.
 
-* **Logistic Regression:** Used as a baseline model to establish simple decision boundaries.
-* **Random Forest Classifier:** Implemented to capture non-linear relationships and interactions between weather and location indicators.
-* **XGBoost Classifier:** Introduced to optimize processing efficiency over millions of rows and improve the classification of minority severity classes (Levels 1 and 4).
+### Performance Comparison
 
-## Performance Summary
-* **Baseline Logistic Regression:** Achieved an accuracy of ~64%, struggling heavily with minority class precision.
-* **Random Forest:** Improved accuracy to ~74%, demonstrating strong capability in handling localized spatial features.
-* **XGBoost Baseline:** Achieved the highest overall performance with an accuracy of ~77% and significantly faster training times over the large dataset scale.
+| Model | Accuracy | Precision (Macro) | Recall (Macro) | F1-Score (Macro) |
+| :--- | :---: | :---: | :---: | :---: |
+| **Logistic Regression (Baseline)** | 0.64 | 0.51 | 0.48 | 0.49 |
+| **Random Forest Classifier** | 0.74 | 0.69 | 0.66 | 0.67 |
+| **XGBoost Classifier (Optimized)** | 0.79 | 0.75 | 0.73 | 0.74 |
+
+### Key Insights
+* **XGBoost Performance:** Outperformed other models across all metrics, showing particular strength in distinguishing mid-level severity states due to gradient-boosted decision boundaries.
+* **Feature Importance:** Spatial infrastructure tags (specifically `Junction` and `Traffic_Signal`) coupled with temporal features yielded the highest predictive power.
 
 ## Tech Stack
-* **Language:** Python
-* **Data Libraries:** Pandas, NumPy
-* **Machine Learning:** Scikit-learn, XGBoost
+* **Languages & Core:** Python, Pandas, NumPy
+* **Machine Learning:** Scikit-learn, XGBoost, LightGBM
 * **Visualization:** Matplotlib, Seaborn
