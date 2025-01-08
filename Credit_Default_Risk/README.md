@@ -29,7 +29,7 @@ Banks and lending institutions lose significant revenue to loan defaults. Approv
    * Aggregations on historical credit behavior
 4. **Handling Class Imbalance**
    * Compared baseline, class weighting, SMOTE, and undersampling
-   * Chose <!-- best performing technique --> based on validation ROC AUC
+   <!-- * Chose based on validation ROC AUC -->
 5. **Modeling**
    * Baseline: Logistic Regression
    * Tree based: Random Forest, XGBoost, LightGBM
